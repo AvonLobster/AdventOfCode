@@ -1,5 +1,5 @@
 function init1() {
     var ac = document.getElementById("adventContent");
-    var content = "<h3>1</h3>";
+    var content = "<h2>1</h2>";
     ac.innerHTML = content;
 }
