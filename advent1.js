@@ -1,6 +1,6 @@
 function init1() {
     var ac = document.getElementById("adventContent");
-    var content = '<h2>--- Day 1:  ---</h2>';
+    var content = '<h2>--- Day 1: Report Repair ---</h2>';
     content += '<textarea id="input1"></textarea><br>';
     content += '<button type="button" onclick="day1part1()">Part 1</button>';
     content += '<button type="button" onclick="day1part2()">Part 2</button>';
