@@ -34,3 +34,14 @@ function hasAtLeast3Vowels(line) {
 function hasDupLetters(line) {
     return line.match(/(.)\1/) != null;
 }
+
+function day5part2() {
+    let input = document.getElementById("input5").value;
+    let lines = input.split('\n');
+    let nice = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+    }
+
+    document.getElementById("output5").innerHTML = nice;
+}
