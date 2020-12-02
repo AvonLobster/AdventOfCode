@@ -41,7 +41,31 @@ function day5part2() {
     let nice = 0;
 
     for (let i = 0; i < lines.length; i++) {
+        if (hasAPairOfCharacters(lines[i]) && hasRepeatingCharWith1LetterBtwn(lines[i])) {
+            nice++;
+        }
     }
 
     document.getElementById("output5").innerHTML = nice;
+}
+
+function hasAPairOfCharacters(line) {
+    for (let i = 0; i < line.length - 1; i++) {
+        let pair = line.substring(i, i+2);
+        for (let j = i+2; j < line.length - 1; j++) {
+            if (pair == line.substring(j, j+2)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function hasRepeatingCharWith1LetterBtwn(line) {
+    for (let i = 0; i < line.length - 2; i++) {
+        if (line.charAt(i) == line.charAt(i+2)) {
+            return true;
+        }
+    }
+    return false;
 }
