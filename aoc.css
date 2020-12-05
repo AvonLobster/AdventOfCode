@@ -48,4 +48,9 @@ h2 {
 
 a {
     color: #009900;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: #99ff99;
 }
