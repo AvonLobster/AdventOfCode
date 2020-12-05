@@ -29,6 +29,14 @@ body {
     background-color: #24243d;
 }
 
+h1 {
+    color: #00cc00;
+    text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
+    font-size: 1em;
+    display: inline-block;
+    padding-right: 1em;
+}
+
 h2 {
     color: #ffffff;
     margin-top: 1em;
@@ -36,4 +44,8 @@ h2 {
     white-space: nowrap;
     font-size: 1em;
     font-weight: normal;
+}
+
+a {
+    color: #009900;
 }
