@@ -1,6 +1,6 @@
 function init5() {
     var ac = document.getElementById("adventContent");
-    var content = '<h2>--- Day 5: Report Repair ---</h2>';
+    var content = '<h2>--- Day 5: Binary Boarding ---</h2>';
     content += '<button type="button" onclick="insertMyInput()">My Input</button><br>';
     content += '<textarea id="input5"></textarea><br>';
     content += '<button type="button" onclick="day5part1()">Part 1</button>';
@@ -12,7 +12,6 @@ function init5() {
 function day5part1() {
     let input = document.getElementById("input5").value;
     let lines = input.split("\n");
-    let tree = buildTree();
     let maxSeatID = 0;
 
     for (let i = 0; i < lines.length; i++) {
