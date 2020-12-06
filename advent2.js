@@ -1,11 +1,5 @@
 function init2() {
-    var ac = document.getElementById("adventContent");
-    var content = "<h2>--- Day 2: Password Philosophy ---</h2>";
-    content += '<textarea id="input2"></textarea><br>';
-    content += '<button type="button" onclick="day2part1()">Part 1</button>';
-    content += '<button type="button" onclick="day2part2()">Part 2</button>';
-    content += '<div id="output2"></div><br>';
-    ac.innerHTML = content;
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(2, "Password Philosophy");
 }
 
 function day2part1() {
