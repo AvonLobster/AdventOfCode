@@ -6,33 +6,9 @@
         <link rel="icon" type="image/png" href="favicon.png" />
         <title>Geoff's Advent of Code 2020</title>
         <link rel="stylesheet" href="aoc.css">
-        <script src="advent1.js"></script>
-        <script src="advent2.js"></script>
-        <script src="advent3.js"></script>
-        <script src="advent4.js"></script>
-        <script src="advent5.js"></script>
-        <script src="advent6.js"></script>
-        <script src="advent7.js"></script>
-        <script src="advent8.js"></script>
-        <script src="advent9.js"></script>
-        <script src="advent10.js"></script>
-        <script src="advent11.js"></script>
-        <script src="advent12.js"></script>
-        <script src="advent13.js"></script>
-        <script src="advent14.js"></script>
-        <script src="advent15.js"></script>
-        <script src="advent16.js"></script>
-        <script src="advent17.js"></script>
-        <script src="advent18.js"></script>
-        <script src="advent19.js"></script>
-        <script src="advent20.js"></script>
-        <script src="advent21.js"></script>
-        <script src="advent22.js"></script>
-        <script src="advent23.js"></script>
-        <script src="advent24.js"></script>
-        <script src="advent25.js"></script>
+        <script src="common.js"></script>
     </head>
-    <body>
+    <body onload="importJSFiles()">
         <h1>Geoff's Advent of Code 2020</h1>
         <a href="https://github.com/AvonLobster/AoC20">[GitHub]</a>
         <div class="tabs">
@@ -66,6 +42,16 @@
         <div id="adventContent"></div>
 
         <script>
+            function importJSFiles() {
+                for (var i = 1; i <= 25; i++) {
+                    var script = document.createElement("script");
+                    var inputScript = document.createElement("script");
+                    script.src = "advent" + i + ".js";
+                    inputScript.src = "input/" + i + ".js";
+                    document.head.appendChild(script);
+                    document.head.appendChild(inputScript);
+                }
+            }
             function openAdvent(event, advNum) {
                 var tabLinks = document.getElementsByClassName("tablink");
 
