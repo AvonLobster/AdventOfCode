@@ -1,12 +1,7 @@
 function init3() {
-    var ac = document.getElementById("adventContent");
-    var content = "<h2>--- Day 3: Toboggan Trajectory ---</h2>";
-    content += '<textarea id="input3"></textarea><br>';
-    content += '<button type="button" onclick="day3part1()">Part 1</button>';
-    content += '<button type="button" onclick="day3part2()">Part 2</button>';
-    content += '<div id="output3"></div><br>';
-    content += '<div id="visual3"></div>'
-    ac.innerHTML = content;
+    let content = getHTMLForAdventDay(3, "Toboggan Trajectory");
+    content += '<br><div id="visual3"></div';
+    document.getElementById("adventContent").innerHTML = content;
 }
 
 function day3part1() {
