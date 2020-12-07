@@ -1,11 +1,5 @@
 function init6() {
-    var ac = document.getElementById("adventContent");
-    var content = '<h2>--- Day 6: Custom Customs ---</h2>';
-    content += '<textarea id="input6"></textarea><br>';
-    content += '<button type="button" onclick="day6part1()">Part 1</button>';
-    content += '<button type="button" onclick="day6part2()">Part 2</button>';
-    content += '<div id="output6"></div>';
-    ac.innerHTML = content;
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(6, "Custom Customs");
 }
 
 function day6part1() {

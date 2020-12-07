@@ -1,11 +1,5 @@
 function init4() {
-    var ac = document.getElementById("adventContent");
-    var content = "<h2>--- Day 4: Passport Processing ---</h2>";
-    content += '<textarea id="input4"></textarea><br>';
-    content += '<button type="button" onclick="day4part1()">Part 1</button>';
-    content += '<button type="button" onclick="day4part2()">Part 2</button>';
-    content += '<div id="output4"></div><br>';
-    ac.innerHTML = content;
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(4, "Passport Processing");
 }
 
 function day4part1() {
