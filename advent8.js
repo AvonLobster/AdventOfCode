@@ -1,5 +1,5 @@
 function init8() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(8, "");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(8, "Handheld Halting");
 }
 
 function day8part1() {

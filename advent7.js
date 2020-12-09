@@ -115,7 +115,7 @@ function day7part2() {
             contents[i] = contents[i].replace(" bag", "");
 
             if (contents[i] != "no other") {
-                let qty = parseInt(contents[i].match(/^\d+/)[0]); //not sure what this is for yet
+                let qty = parseInt(contents[i].match(/^\d+/)[0]);
                 let name = contents[i].substring(contents[i].indexOf(" ") + 1);
                 let subBag = null;
 
