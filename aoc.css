@@ -54,3 +54,16 @@ a {
 a:hover, a:focus {
     color: #99ff99;
 }
+
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #009900;
+    font-family: "Source Code Pro", monospace;
+    font-size: 13pt;
+}
+
+button:hover {
+    color: #99ff99;
+}
