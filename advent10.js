@@ -1,5 +1,5 @@
 function init10() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(10, "");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(10, "Adapter Array");
 }
 
 function day10part1() {

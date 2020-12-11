@@ -11,5 +11,5 @@ function getHTMLForAdventDay(day, name) {
 function insertMyInput(day) {
     let inputBox = document.getElementById("input" + day);
     let inputName = "day" + day + "Input";
-    inputBox.innerHTML = eval(inputName);
+    inputBox.value = eval(inputName);
 }
