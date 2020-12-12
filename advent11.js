@@ -1,5 +1,5 @@
 function init11() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(11, "");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(11, "Seating System");
 }
 
 function day11part1() {
