@@ -11,7 +11,7 @@ function day1part1() {
     var prev = nums[0]
     var increased = 0;
 
-    for (var i = 1; i < nums.length && !done; i++) {
+    for (var i = 1; i < nums.length; i++) {
         if (nums[i] > prev) {
             increased++;
         }
