@@ -1,5 +1,5 @@
 function init12() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(12, "");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(12, "Rain Risk");
 }
 
 function day12part1() {
