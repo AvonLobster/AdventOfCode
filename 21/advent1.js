@@ -1,5 +1,5 @@
 function init1() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(1, 2021, "Sonar Sweep");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDayAndYear(1, 2021, "Sonar Sweep");
 }
 
 function day1part1() {

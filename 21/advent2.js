@@ -1,5 +1,5 @@
 function init2() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(2, 2021, "Dive!");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDayAndYear(2, 2021, "Dive!");
 }
 
 function day2part1() {

@@ -1,8 +1,8 @@
 function getHTMLForAdventDay(day, name) {
-    getHTMLForAdventDay(day, "2020", name);
+    return getHTMLForAdventDayAndYear(day, "2020", name);
 }
 
-function getHTMLForAdventDay(day, year, name) {
+function getHTMLForAdventDayAndYear(day, year, name) {
     let content = '<h2>--- Day <a href="https://adventofcode.com/' + year + '/day/' + day + '" target="_blank">' + day + '</a>: ' + name + ' ---</h2>';
     content += '<button type="button" onclick="insertMyInput(' + day +')">[My Input]</button><br>';
     content += '<textarea id="input' + day + '" rows="15" cols="80"></textarea><br>';
