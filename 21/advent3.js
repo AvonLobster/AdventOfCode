@@ -1,56 +1,108 @@
 function init3() {
-    let content = getHTMLForAdventDay(3, "Toboggan Trajectory");
-    content += '<br><div id="visual3"></div';
-    document.getElementById("adventContent").innerHTML = content;
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDayAndYear(3, 2021, "Binary Diagnostic");
 }
 
 function day3part1() {
     let input = document.getElementById("input3").value;
     let lines = input.split("\n");
-    let treeCount = getTreeCount(lines, 3, 1);
-    let vis = "";
+    let binCount = new Array(lines[0].length).fill(0);
+    let gamma = "";
+    let episilon = "";
 
     for (let i = 0; i < lines.length; i++) {
-        vis += lines[i] + "<br>";
+        for (let j = 0; j < lines[i].length; j++) {
+            if (lines[i][j] == "1") {
+                binCount[j]++;
+            }
+        }
     }
 
-    document.getElementById("output3").innerHTML = treeCount;
-    document.getElementById("visual3").innerHTML = vis;
+    for (let i = 0; i < binCount.length; i++) {
+        if (binCount[i] > lines.length / 2) {
+            gamma += "1";
+            episilon += "0";
+        } else {
+            gamma += "0";
+            episilon += "1";
+        }
+    }
+
+    let gammaDec = binToDec(gamma);
+    let episilonDec = binToDec(episilon);
+
+    document.getElementById("output3").innerHTML = gammaDec * episilonDec;
 }
 
 function day3part2() {
     let input = document.getElementById("input3").value;
     let lines = input.split("\n");
-    let lines1 = lines.slice();
-    let lines2 = lines.slice();
-    let lines3 = lines.slice();
-    let lines4 = lines.slice();
-    let lines5 = lines.slice();
-    let treeCount1 = getTreeCount(lines1, 1, 1);
-    let treeCount2 = getTreeCount(lines2, 3, 1);
-    let treeCount3 = getTreeCount(lines3, 5, 1);
-    let treeCount4 = getTreeCount(lines4, 7, 1);
-    let treeCount5 = getTreeCount(lines5, 1, 2);
-    let prod = treeCount1 * treeCount2 * treeCount3 * treeCount4 * treeCount5;
-    document.getElementById("output3").innerHTML = prod;
-}
 
-function getTreeCount(lines, movex, movey) {
-    let x = 0;
-    let y = 0;
-    let treeCount = 0;
+    // Oxygen
+    let j = 0;
+    let binCount = 0;
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i][j] == "1") {
+            binCount++;
+        }
 
-    for (y = movey; y < lines.length; y += movey) {
-        x += movex;
-        x %= lines[y].length;
-        
-        if (lines[y].charAt(x) == "#") {
-            treeCount++;
-            lines[y] = lines[y].substring(0, x) + "X" + lines[y].substring(x);
-        } else {
-            lines[y] = lines[y].substring(0, x) + "O" + lines[y].substring(x);
+        if (i + 1 == lines.length) {
+            if (binCount >= lines.length / 2) {
+                lines = lines.filter(line => line[j] == "1");
+            } else {
+                lines = lines.filter(line => line[j] == "0");
+            }
+
+            if (lines.length <= 1 || j == lines[0].length - 1) {
+                break;
+            }
+
+            j++;
+            i = -1;
+            binCount = 0;
         }
     }
+    let oxygen = lines[0];
 
-    return treeCount;
+    // CO2
+    lines = input.split("\n");
+    j = 0;
+    binCount = 0;
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i][j] == "0") {
+            binCount++;
+        }
+
+        if (i + 1 == lines.length) {
+            if (binCount <= lines.length / 2) {
+                lines = lines.filter(line => line[j] == "0");
+            } else {
+                lines = lines.filter(line => line[j] == "1");
+            }
+
+            if (lines.length <= 1 || j == lines[0].length - 1) {
+                break;
+            }
+
+            j++;
+            i = -1;
+            binCount = 0;
+        }
+    }
+    let co2 = lines[0];
+
+    let oxygenDec = binToDec(oxygen);
+    let co2Dec = binToDec(co2);
+
+    document.getElementById("output3").innerHTML = oxygenDec * co2Dec;
+}
+
+// Function converts binary string to decimal
+function binToDec(bin) {
+    let dec = 0;
+    for (let i = 0; i < bin.length; i++) {
+        if (bin[i] == "1") {
+            dec += Math.pow(2, bin.length - i - 1);
+        }
+    }
+    return dec;
 }
