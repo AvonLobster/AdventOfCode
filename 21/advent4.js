@@ -1,116 +1,175 @@
 function init4() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(4, "Passport Processing");
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDayAndYear(4, 2021, "Giant Squid");
 }
 
-function day4part1() {
-    let input = document.getElementById("input4").value;
-    let lines = input.split("\n");
-    let byr = 0;
-    let iyr = 0;
-    let eyr = 0;
-    let hgt = 0;
-    let hcl = 0;
-    let ecl = 0;
-    let pid = 0;
-    let cid = 0;
-    let validCount = 0;
-
-    for (let i = 0; i < lines.length; i++) {
-        if (lines[i].match(/^\s*$/)) {
-            if (byr + iyr + eyr + hgt + hcl + ecl + pid >= 7) validCount++;
-            byr = 0;
-            iyr = 0;
-            eyr = 0;
-            hgt = 0;
-            hcl = 0;
-            ecl = 0;
-            pid = 0;
-            cid = 0;
-        } else {
-            if (lines[i].match(/byr:/)) byr++;
-            if (lines[i].match(/iyr:/)) iyr++;
-            if (lines[i].match(/eyr:/)) eyr++;
-            if (lines[i].match(/hgt:/)) hgt++;
-            if (lines[i].match(/hcl:/)) hcl++;
-            if (lines[i].match(/ecl:/)) ecl++;
-            if (lines[i].match(/pid:/)) pid++;
-            if (lines[i].match(/cid:/)) cid++;
+class BingoGrid {
+    constructor(numbers) {
+        this.hasBingo = false;
+        this.grid = [5];
+        for (let i = 0; i < 5; i++) {
+            this.grid[i] = [5];
+            
+            for (let j = 0; j < 5; j++) {
+                this.grid[i][j] = numbers[i][j];
+            }
         }
     }
 
-    document.getElementById("output4").innerHTML = validCount;
-}
-
-function day4part2() {
-    let input = document.getElementById("input4").value;
-    let lines = input.split("\n");
-    let byr = 0;
-    let iyr = 0;
-    let eyr = 0;
-    let hgt = 0;
-    let hcl = 0;
-    let ecl = 0;
-    let pid = 0;
-    let cid = 0;
-    let validCount = 0;
-
-    for (let i = 0; i < lines.length; i++) {
-        if (lines[i].match(/^\s*$/)) {
-            if (byr + iyr + eyr + hgt + hcl + ecl + pid >= 7) validCount++;
-            byr = 0;
-            iyr = 0;
-            eyr = 0;
-            hgt = 0;
-            hcl = 0;
-            ecl = 0;
-            pid = 0;
-            cid = 0;
-        } else {
-            let fields = lines[i].split(" ");
-
-            for (let j = 0; j < fields.length; j++) {
-                let field = fields[j].split(":");
-
-                if (field[0] == "byr") {
-                    let birthYear = parseInt(field[1]);
-                    if (birthYear >= 1920 && birthYear <= 2002) byr++;
-                }
-                if (field[0] == "iyr") {
-                    let issueYear = parseInt(field[1]);
-                    if (issueYear >= 2010 && issueYear <= 2020) iyr++;
-                }
-                if (field[0] == "eyr") {
-                    let expirationYear = parseInt(field[1]);
-                    if (expirationYear >= 2020 && expirationYear <= 2030) eyr++;
-                }
-                if (field[0] == "hgt") {
-                    let height = parseInt(field[1]);
-                    if (field[1].includes("cm")) {
-                        if (height >= 150 && height <= 193) hgt++;
-                    } else if (field[1].includes("in")) {
-                        if (height >= 59 && height <= 76) hgt++;
-                    }
-                } 
-                if (field[0] == "hcl") {
-                    let hairColor = field[1];
-                    if (hairColor.match(/^#([a-f0-9]{6})/)) hcl++;
-                }
-                if (field[0] == "ecl") {
-                    let eyeColor = field[1];
-                    if (eyeColor == "amb" || eyeColor == "blu" || eyeColor == "brn" || 
-                        eyeColor == "gry" || eyeColor == "grn" || eyeColor == "hzl" || eyeColor == "oth") ecl++;
-                }
-                if (field[0] == "pid") {
-                    let passportID = field[1];
-                    if (passportID.match(/^\d{9}$/)) pid++;
-                }
-                if (field[0] == "cid") {
-                    // that's nice
-                    cid++;
+    placeChip(num) {
+        for (let i = 0; i < 5; i++) {
+            for(let j = 0; j < 5; j++) {
+                if (this.grid[i][j] == num) {
+                    this.grid[i][j] = "X";
                 }
             }
         }
     }
 
-    document.getElementById("output4").innerHTML = validCount;
+    getBingo() {
+        // check diagonals. Oh, actually don't
+        // if (this.grid[0][0] == "X" && this.grid[1][1] == "X" && this.grid[2][2] == "X" && this.grid[3][3] == "X" && this.grid[4][4] == "X") {
+        //     return true;
+        // } else if (this.grid[0][4] == "X" && this.grid[1][3] == "X" && this.grid[2][2] == "X" && this.grid[3][1] == "X" && this.grid[4][0] == "X") {
+        //     return true;
+        // }
+
+        // check rows
+        for (let i = 0; i < 5; i++) {
+            if (this.grid[i][0] == "X" && this.grid[i][1] == "X" && this.grid[i][2] == "X" && this.grid[i][3] == "X" && this.grid[i][4] == "X") {
+                this.hasBingo = true;
+                return true;
+            }
+        }
+
+        // check columns
+        for (let i = 0; i < 5; i++) {
+            if (this.grid[0][i] == "X" && this.grid[1][i] == "X" && this.grid[2][i] == "X" && this.grid[3][i] == "X" && this.grid[4][i] == "X") {
+                this.hasBingo = true;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    getSum() {
+        let sum = 0;
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                if (this.grid[i][j] != "X") {
+                    sum += parseInt(this.grid[i][j]);
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    hasBongo() {
+        return this.hasBingo;
+    }
+}
+
+function day4part1() {
+    let input = document.getElementById("input4").value;
+    let lines = input.split("\n\n");
+    let bingoNums = lines[0].split(",");
+    lines = lines.slice(1);
+    grids = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        let rows = lines[i].split("\n");
+        let numbersGrid = [5];
+        for (let j = 0; j < 5; j++) {
+            rows[j] = rows[j].replace(/ +/g, " ");
+            rows[j] = rows[j].trim();
+            let numbers = rows[j].split(" ");
+            numbersGrid[j] = [5];
+            for (let k = 0; k < 5; k++) {
+                numbersGrid[j][k] = numbers[k];
+            }
+        }
+
+        grids.push(new BingoGrid(numbersGrid));
+    }
+
+    let done = false;
+    let winningBoard = -1;
+    let winningNum = -1;
+
+    for (let i = 0; i < bingoNums.length && !done; i++) {
+        for (let j = 0; j < grids.length; j++) {
+            grids[j].placeChip(bingoNums[i]);
+        }
+
+        for (let j = 0; j < grids.length; j++) {
+            if (grids[j].getBingo()) {
+                done = true;
+                winningBoard = j;
+                winningNum = bingoNums[i];
+                break;
+            }
+        }
+    }
+
+    let sum = grids[winningBoard].getSum();
+
+    document.getElementById("output4").innerHTML = sum * winningNum;
+}
+
+function day4part2() {
+    let input = document.getElementById("input4").value;
+    let lines = input.split("\n\n");
+    let bingoNums = lines[0].split(",");
+    lines = lines.slice(1);
+    grids = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        let rows = lines[i].split("\n");
+        let numbersGrid = [5];
+        for (let j = 0; j < 5; j++) {
+            rows[j] = rows[j].replace(/ +/g, " ");
+            rows[j] = rows[j].trim();
+            let numbers = rows[j].split(" ");
+            numbersGrid[j] = [5];
+            for (let k = 0; k < 5; k++) {
+                numbersGrid[j][k] = numbers[k];
+            }
+        }
+
+        grids.push(new BingoGrid(numbersGrid));
+    }
+
+    let done = false;
+    let winningBoard = -1;
+    let winningNum = -1;
+    let bingoCount = 0;
+
+    for (let i = 0; i < bingoNums.length && !done; i++) {
+        for (let j = 0; j < grids.length; j++) {
+            if (grids[j].hasBongo()) {
+                continue;
+            }
+            grids[j].placeChip(bingoNums[i]);
+        }
+
+        for (let j = 0; j < grids.length; j++) {
+            if (grids[j].hasBongo()) {
+                continue;
+            }
+            if (grids[j].getBingo()) {
+                bingoCount++;
+                
+                if (bingoCount == grids.length) {
+                    done = true;
+                    winningBoard = j;
+                    winningNum = bingoNums[i];
+                }
+            }
+        }
+    }
+
+    let sum = grids[winningBoard].getSum();
+
+    document.getElementById("output4").innerHTML = sum * winningNum;
 }
