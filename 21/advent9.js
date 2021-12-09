@@ -1,85 +1,128 @@
 function init9() {
-    let content = getHTMLForAdventDay(9, "Encoding Error");
-    content += 'Preamble Length: <input id="arg1" type="number" min="5" max="25" value="25" />';
-    document.getElementById("adventContent").innerHTML = content;
+    document.getElementById("adventContent").innerHTML = getHTMLForAdventDayAndYear(9, 2021, "Smoke Basin");
+}
+
+class HeightMap {
+    constructor(input) {
+        this.heightmap = [];
+        let lines = input.split("\n");
+
+        for (let i = 0; i < lines.length; i++) {
+            this.heightmap[i] = [];
+            for (let j = 0; j < lines[i].length; j++) {
+                this.heightmap[i][j] = parseInt(lines[i].charAt(j));
+            }
+        }
+    }
+
+    getUp(x, y) {
+        if (x > 0) {
+            return this.heightmap[x - 1][y];
+        }
+        return 10;
+    }
+
+    getDown(x, y) {
+        if (x < this.heightmap.length - 1) {
+            return this.heightmap[x + 1][y];
+        }
+        return 10;
+    }
+
+    getLeft(x, y) {
+        if (y > 0) {
+            return this.heightmap[x][y - 1];
+        }
+        return 10;
+    }
+
+    getRight(x, y) {
+        if (y < this.heightmap[x].length - 1) {
+            return this.heightmap[x][y + 1];
+        }
+        return 10;
+    }
+
+    getBasinArea(x, y) {
+        let visited = [];
+        let queue = [];
+        queue.push(x+","+y);
+
+        while (queue.length > 0) {
+            let current = queue.shift();
+
+            if (visited.indexOf(current) > -1) {
+                continue;
+            }
+            visited.push(current);
+            let x = parseInt(current.split(",")[0]);
+            let y = parseInt(current.split(",")[1]);
+
+            let x2 = x-1;
+            if (this.getUp(x, y) < 9 && visited.indexOf(x2+","+y) == -1) {
+                queue.push(x2+","+y);
+            }
+            x2 = x+1;
+            if (this.getDown(x, y) < 9 && visited.indexOf(x2+","+y) == -1) {
+                queue.push(x2+","+y);
+            }
+            let y2 = y-1;
+            if (this.getLeft(x, y) < 9 && visited.indexOf(x+","+y2) == -1) {
+                queue.push(x+","+y2);
+            }
+            y2 = y+1;
+            if (this.getRight(x, y) < 9 && visited.indexOf(x+","+y2) == -1) {
+                queue.push(x+","+y2);
+            }
+        }
+
+        return visited.length;
+    }
 }
 
 function day9part1() {
     let input = document.getElementById("input9").value;
-    let lines = input.split("\n");
-    let preambleLength = parseInt(document.getElementById("arg1").value);
-    let preamble = [];
-    let validList = new Set();
-    let valid = true;
-    let i = 0;
-    let candidate = 0;
+    let heightMap = new HeightMap(input);
+    let riskLevel = 0;
 
-    for (; i < preambleLength; i++) {
-        preamble.push(parseInt(lines[i]));
-    }
+    for (let i = 0; i < heightMap.heightmap.length; i++) {
+        for (let j = 0; j < heightMap.heightmap[i].length; j++) {
+            let point = heightMap.heightmap[i][j];
 
-    validList = makeValidList(preamble);
-
-    while (valid) {
-        candidate = parseInt(lines[i++]);
-
-        if (validList.has(candidate)) {
-            preamble.shift();
-            preamble.push(candidate);
-            validList = makeValidList(preamble);
-        } else {
-            valid = false;
+            if (point < heightMap.getUp(i, j) &&
+                point < heightMap.getDown(i, j) && 
+                point < heightMap.getLeft(i, j) &&
+                point < heightMap.getRight(i, j)) {
+                riskLevel += point + 1;
+            }
         }
     }
-
-    document.getElementById("output9").innerHTML = candidate;
-    return candidate;
+    
+    document.getElementById("output9").innerHTML = riskLevel;
 }
 
 function day9part2() {
     let input = document.getElementById("input9").value;
-    let lines = input.split("\n");
-    let candidate = day9part1();
-    let contiguousSet = [];
-    let done = false;
+    let heightMap = new HeightMap(input);
+    let largestBasins = new Array(3).fill(0);
 
-    for (let i = 0; i < lines.length && !done; i++) {
-        contiguousSet.push(parseInt(lines[i]));
-        let sum = contiguousSet.reduce(add, 0);
+    for (let i = 0; i < heightMap.heightmap.length; i++) {
+        for (let j = 0; j < heightMap.heightmap[i].length; j++) {
+            let point = heightMap.heightmap[i][j];
 
-        if (sum == candidate) done = true; // If this happens, we missed the window
-        else if (sum > candidate) {
-            while (sum > candidate) {
-                contiguousSet.shift();
-                sum = contiguousSet.reduce(add, 0);
+            if (point < heightMap.getUp(i, j) &&
+                point < heightMap.getDown(i, j) && 
+                point < heightMap.getLeft(i, j) &&
+                point < heightMap.getRight(i, j)) {
+                let area = heightMap.getBasinArea(i, j);
+                let minArea = Math.min(largestBasins[0], largestBasins[1], largestBasins[2]);
+                
+                if (area > minArea) {
+                    largestBasins[largestBasins.indexOf(minArea)] = area;
+                }
             }
-
-            if (sum == candidate) done = true;
         }
     }
-
-    contiguousSet.sort(function(a, b) {
-        return a - b;
-    });
-    let min = contiguousSet[0];
-    let max = contiguousSet[contiguousSet.length - 1];
-    let weakness = min + max;
-
-    document.getElementById("output9").innerHTML = weakness;
-}
-
-function makeValidList(preamble) {
-    let validList = new Set();
-
-    for (let j = 0; j < preamble.length; j++) {
-        for (let k = j+1; k < preamble.length; k++) {
-            validList.add(preamble[j] + preamble[k]);
-        }
-    }
-
-    return validList;
-}
-
-function add(accumulator, a) {
-    return accumulator + a;
+    
+    document.getElementById("output9").innerHTML = largestBasins[0] * largestBasins[1] * largestBasins[2];
 }
