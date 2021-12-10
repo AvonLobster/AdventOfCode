@@ -2,63 +2,122 @@ function init10() {
     document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(10, "Adapter Array");
 }
 
+function getExpectedSyntax(char) {
+    switch (char) {
+        case '(':
+            return ')';
+        case '[':
+            return ']';
+        case '{':
+            return '}';
+        case '<':
+            return '>';
+    }
+}
+
+function getScore(char) {
+    switch (char) {
+        case ')':
+            return 3;
+        case ']':
+            return 57;
+        case '}':
+            return 1197;
+        case '>':
+            return 25137;
+    }
+}
+
 function day10part1() {
     let input = document.getElementById("input10").value;
     let lines = input.split("\n");
-    let adapters = [];
-    adapters.push(0);
-    let oneCount = 0;
-    let threeCount = 0;
+    let syntaxStack = [];
+    let score = 0;
 
     for (let i = 0; i < lines.length; i++) {
-        adapters.push(parseInt(lines[i]));
-    }
+        let line = lines[i];
+        syntaxStack = [];
+        for (let j = 0; j < line.length; j++) {
+            let char = line[j];
+            if (char == '(' ||
+                char == '[' ||
+                char == '{' ||
+                char == '<') {
+                syntaxStack.push(char);
+            } else {
+                let popped = syntaxStack.pop();
+                let expected = getExpectedSyntax(popped);
 
-    adapters.sort(function(a, b) {
-        return a - b;
-    });
-    adapters.push(adapters[adapters.length - 1] + 3);
-
-    for (let i = 1; i < adapters.length; i++) {
-        if (adapters[i] - adapters[i-1] == 1) {
-            oneCount++;
-        } else if (adapters[i] - adapters[i-1] == 3) {
-            threeCount++;
+                if (char != expected) {
+                    console.log("Expected " + expected + " but found " + char + " on line " + i + " instead.");
+                    score += getScore(char);
+                    continue;
+                }
+            }
         }
     }
 
-    let ans = oneCount * threeCount;
-    let content = '<p>' + oneCount + ' differences of 1</p>';
-    content += '<p>' + threeCount + ' differences of 3</p>';
-    content += '<p>' + ans;
+    document.getElementById("output10").innerHTML = score;
+}
 
-    document.getElementById("output10").innerHTML = content;
+function getScore2(char) {
+    switch (char) {
+        case ')':
+            return 1;
+        case ']':
+            return 2;
+        case '}':
+            return 3;
+        case '>':
+            return 4;
+    }
 }
 
 function day10part2() {
     let input = document.getElementById("input10").value;
     let lines = input.split("\n");
-    let adapters = [];
-    adapters.push(0);
-
+    let syntaxStack = [];
+    let scores = [];
+    let corrupted = false;
+    let line = "";
+    
     for (let i = 0; i < lines.length; i++) {
-        adapters.push(parseInt(lines[i]));
-    }
+        corrupted = false;
+        line = lines[i];
+        syntaxStack = [];
 
-    adapters.sort(function(a, b) {
-        return a - b;
-    });
+        for (let j = 0; j < line.length; j++) {
+            let char = line[j];
+            if (char == '(' ||
+                char == '[' ||
+                char == '{' ||
+                char == '<') {
+                syntaxStack.push(char);
+            } else {
+                let popped = syntaxStack.pop();
+                let expected = getExpectedSyntax(popped);
 
-    let options = new Array(adapters.length).fill(0);
-    options[0] = 1;
-
-    for (let i = 0; i < options.length; i++) {
-        for (let j = i-3; j < i; j++) {
-            if (adapters[i] <= adapters[j] + 3) {
-                options[i] += options[j];
+                if (char != expected) {
+                    corrupted = true;
+                    continue;
+                }
             }
+        }
+
+        if (!corrupted) {
+            let score = 0;
+
+            while (syntaxStack.length > 0) {
+                let popped = syntaxStack.pop();
+                let expected = getExpectedSyntax(popped);
+                score *= 5;
+                score += getScore2(expected);
+            }
+            scores.push(score);
         }
     }
 
-    document.getElementById("output10").innerHTML = options[options.length - 1];
+    scores = scores.sort((a, b) => b - a);
+
+    document.getElementById("output10").innerHTML = scores[Math.floor(scores.length / 2)];
 }
