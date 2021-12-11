@@ -1,206 +1,196 @@
 function init11() {
-    document.getElementById("adventContent").innerHTML = getHTMLForAdventDay(11, "Seating System");
+    let content = getHTMLForAdventDayAndYear(11, 2021, "Dumbo Octopus");
+    content += 'Steps: <input id="arg1" type="number" min="0" max="999" value="100" /><br><br>';
+    content += "<div id=\"print11\"></div>";
+    document.getElementById("adventContent").innerHTML = content;
+}
+
+class OctopusGrid {
+    constructor(input) {
+        let lines = input.split("\n");
+        this.grid = [];
+        this.flashCount = 0;
+        this.stepCount = 0;
+        
+        for (let i = 0; i < lines.length; i++) {
+            this.grid[i] = [];
+
+            for (let j = 0; j < lines[i].length; j++) {
+                this.grid[i][j] = parseInt(lines[i][j]);
+            }
+        }
+    }
+
+    step(numSteps) {
+        for (let i = 0; i < numSteps; i++) {
+            for (let j = 0; j < this.grid.length; j++) {
+                for (let k = 0; k < this.grid[j].length; k++) {
+                    this.stepOctopus(j, k);
+                }
+            }
+
+            for (let j = 0; j < this.grid.length; j++) {
+                for (let k = 0; k < this.grid[j].length; k++) {
+                    if (this.grid[j][k] == -1) {
+                        this.grid[j][k] = 0;
+                    }
+                }
+            }
+        }
+
+        this.printGrid();
+    }
+
+    stepUntilBigFlash() {
+        while (!this.thisIsIt()) {
+            this.stepCount++;
+
+            for (let j = 0; j < this.grid.length; j++) {
+                for (let k = 0; k < this.grid[j].length; k++) {
+                    this.stepOctopus(j, k);
+                }
+            }
+
+            for (let j = 0; j < this.grid.length; j++) {
+                for (let k = 0; k < this.grid[j].length; k++) {
+                    if (this.grid[j][k] == -1) {
+                        this.grid[j][k] = 0;
+                    }
+                }
+            }
+        }
+
+        this.printGrid();
+    }
+
+    thisIsIt() {
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                if (this.grid[i][j] != 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    stepOctopus(x, y) {
+        let octopus = this.grid[x][y];
+        
+        if (octopus >= 0) {
+            octopus++;
+
+            if (octopus > 9) {
+                this.grid[x][y] = -1;
+                this.flash(x, y);
+            } else {
+                this.grid[x][y] = octopus;
+            }
+        }
+    }
+
+    flash(x, y) {
+        this.flashCount++;
+        if (this.getN(x, y) >= 0) this.stepOctopus(x - 1, y);
+        if (this.getS(x, y) >= 0) this.stepOctopus(x + 1, y);
+        if (this.getW(x, y) >= 0) this.stepOctopus(x, y - 1);
+        if (this.getE(x, y) >= 0) this.stepOctopus(x, y + 1);
+        if (this.getNW(x, y) >= 0) this.stepOctopus(x - 1, y - 1);
+        if (this.getNE(x, y) >= 0) this.stepOctopus(x - 1, y + 1);
+        if (this.getSW(x, y) >= 0) this.stepOctopus(x + 1, y - 1);
+        if (this.getSE(x, y) >= 0) this.stepOctopus(x + 1, y + 1);
+    }
+
+    getFlashCount() {
+        return this.flashCount;
+    }
+
+    getStepCount() {
+        return this.stepCount;
+    }
+
+    getN(x, y) {
+        if (x > 0) {
+            return this.grid[x - 1][y];
+        }
+        return -1;
+    }
+
+    getS(x, y) {
+        if (x < this.grid.length - 1) {
+            return this.grid[x + 1][y];
+        }
+        return -1;
+    }
+
+    getW(x, y) {
+        if (y > 0) {
+            return this.grid[x][y - 1];
+        }
+        return -1;
+    }
+
+    getE(x, y) {
+        if (y < this.grid[x].length - 1) {
+            return this.grid[x][y + 1];
+        }
+        return -1;
+    }
+
+    getNW(x, y) {
+        if (x > 0 && y > 0) {
+            return this.grid[x - 1][y - 1];
+        }
+        return -1;
+    }
+
+    getNE(x, y) {
+        if (x > 0 && y < this.grid[x].length - 1) {
+            return this.grid[x - 1][y + 1];
+        }
+        return -1;
+    }
+
+    getSW(x, y) {
+        if (x < this.grid.length - 1 && y > 0) {
+            return this.grid[x + 1][y - 1];
+        }
+        return -1;
+    }
+
+    getSE(x, y) {
+        if (x < this.grid.length - 1 && y < this.grid[x].length - 1) {
+            return this.grid[x + 1][y + 1];
+        }
+        return -1;
+    }
+
+    printGrid() {
+        let content = "";
+
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                content += this.grid[i][j];
+            }
+
+            content += "<br>";
+        }
+
+        document.getElementById("print11").innerHTML = content;
+    }
 }
 
 function day11part1() {
     let input = document.getElementById("input11").value;
-    let lines = input.split("\n");
-    let grid = new Array();
-    let done = false;
-    let occCount = 0;
-
-    for (let i = 0; i < lines.length; i++) {
-        grid.push(new Array());
-        for (let j = 0; j < lines[i].length; j++) {
-            grid[i].push(lines[i].charAt(j));
-        }
-    }
-
-    while (!done) {
-        done = true;
-
-        let newGrid = grid.map(function(x) {
-            return x.slice();
-        });
-
-        for (let x = 0; x < grid.length; x++) {
-            for (let y = 0; y < grid[x].length; y++) {
-                if (grid[x][y] == "L") {
-                    if (adjacentOccupation(x, y, grid) == 0) {
-                        newGrid[x][y] = "#";
-                        done = false;
-                    }
-                } else if (grid[x][y] == "#") {
-                    if (adjacentOccupation(x, y, grid) >= 4) {
-                        newGrid[x][y] = "L";
-                        done = false;
-                    }
-                }
-            }
-        }
-
-        grid = newGrid;
-    }
-
-    for (let x = 0; x < grid.length; x++) {
-        for (let y = 0; y < grid[x].length; y++) {
-            if (grid[x][y] == "#") occCount++;
-        }
-    }
-
-    document.getElementById("output11").innerHTML = occCount;
-}
-
-function adjacentOccupation(x, y, grid) {
-    let adjCount = 0;
-
-    if (x-1 >= 0 && grid[x-1][y] == "#") adjCount++;
-    if (x-1 >= 0 && y-1 >= 0 && grid[x-1][y-1] == "#") adjCount++;
-    if (x-1 >= 0 && y+1 < grid[x].length && grid[x-1][y+1] == "#") adjCount++;
-    if (y-1 >= 0 && grid[x][y-1] == "#") adjCount++;
-    if (y+1 < grid[x].length && grid[x][y+1] == "#") adjCount++;
-    if (x+1 < grid.length && grid[x+1][y] == "#") adjCount++;
-    if (x+1 < grid.length && y-1 >= 0 && grid[x+1][y-1] == "#") adjCount++;
-    if (x+1 < grid.length && y+1 < grid[x].length && grid[x+1][y+1] == "#") adjCount++;
-
-    return adjCount;
+    let grid = new OctopusGrid(input);
+    grid.step(document.getElementById("arg1").value);
+    document.getElementById("output11").innerHTML = grid.getFlashCount();
 }
 
 function day11part2() {
     let input = document.getElementById("input11").value;
-    let lines = input.split("\n");
-    let grid = new Array();
-    let done = false;
-    let occCount = 0;
-
-    for (let i = 0; i < lines.length; i++) {
-        grid.push(new Array());
-        for (let j = 0; j < lines[i].length; j++) {
-            grid[i].push(lines[i].charAt(j));
-        }
-    }
-
-    while (!done) {
-        done = true;
-
-        let newGrid = grid.map(function(x) {
-            return x.slice();
-        });
-
-        for (let x = 0; x < grid.length; x++) {
-            for (let y = 0; y < grid[x].length; y++) {
-                if (grid[x][y] == "L") {
-                    if (lineOfSightOccupation(x, y, grid) == 0) {
-                        newGrid[x][y] = "#";
-                        done = false;
-                    }
-                } else if (grid[x][y] == "#") {
-                    if (lineOfSightOccupation(x, y, grid) >= 5) {
-                        newGrid[x][y] = "L";
-                        done = false;
-                    }
-                }
-            }
-        }
-
-        grid = newGrid;
-    }
-
-    for (let x = 0; x < grid.length; x++) {
-        for (let y = 0; y < grid[x].length; y++) {
-            if (grid[x][y] == "#") occCount++;
-        }
-    }
-
-    document.getElementById("output11").innerHTML = occCount;
-}
-
-function lineOfSightOccupation(x, y, grid) {
-    let losCount = 0;
-    
-    let north = x-1;
-    while (north >= 0) {
-        if (grid[north][y] == "#") {
-            losCount++;
-            break;
-        } else if (grid[north][y] == ".") north--;
-        else break;
-    }
-
-    let northEast1 = x-1;
-    let northEast2 = y+1;
-    while (northEast1 >= 0 && northEast2 < grid[x].length) {
-        if (grid[northEast1][northEast2] == "#") {
-            losCount++;
-            break;
-        } else if (grid[northEast1][northEast2] == ".") {
-            northEast1--;
-            northEast2++;
-        } else break;
-    }
-
-    let east = y+1;
-    while (east < grid[x].length) {
-        if (grid[x][east] == "#") {
-            losCount++;
-            break;
-        } else if (grid[x][east] == ".") east++;
-        else break;
-    }
-    
-    let southEast1 = x+1;
-    let southEast2 = y+1;
-    while (southEast1 < grid.length && southEast2 < grid[x].length) {
-        if (grid[southEast1][southEast2] == "#") {
-            losCount++;
-            break;
-        } else if (grid[southEast1][southEast2] == ".") {
-            southEast1++;
-            southEast2++;
-        } else break;
-    }
-
-    let south = x+1;
-    while (south < grid.length) {
-        if (grid[south][y] == "#") {
-            losCount++;
-            break;
-        } else if (grid[south][y] == ".") south++;
-        else break;
-    }
-
-    let southWest1 = x+1;
-    let southWest2 = y-1;
-    while (southWest1 < grid.length && southWest2 >= 0) {
-        if (grid[southWest1][southWest2] == "#") {
-            losCount++;
-            break;
-        } else if (grid[southWest1][southWest2] == ".") {
-            southWest1++;
-            southWest2--;
-        } else break;
-    }
-
-    let west = y-1;
-    while (west >= 0) {
-        if (grid[x][west] == "#") {
-            losCount++;
-            break;
-        } else if (grid[x][west] == ".") west--;
-        else break;
-    }
-
-    let northWest1 = x-1;
-    let northWest2 = y-1;
-    while (northWest1 >= 0 && northWest2 >=0) {
-        if (grid[northWest1][northWest2] == "#") {
-            losCount++;
-            break;
-        } else if (grid[northWest1][northWest2] == ".") {
-            northWest1--;
-            northWest2--;
-        } else break;
-    }
-
-    return losCount;
+    let grid = new OctopusGrid(input);
+    grid.stepUntilBigFlash();
+    document.getElementById("output11").innerHTML = grid.getStepCount();
 }
